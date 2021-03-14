@@ -10,6 +10,14 @@ function Square(props) {
   )
 }
 
+function OrderToggleButton(props) {
+  return (
+    <button onClick={props.onClick}>
+      {props.value}
+    </button>
+  )
+}
+
 class Board extends React.Component {
   renderSquare(i) {
     return (
@@ -52,6 +60,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      orderByAsc: true,
     };
   }
 
@@ -70,6 +79,12 @@ class Game extends React.Component {
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
+    });
+  }
+
+  handleOrderClick() {
+    this.setState({
+      orderByAsc: !this.state.orderByAsc,
     });
   }
 
@@ -106,6 +121,8 @@ class Game extends React.Component {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
+    const order = this.state.orderByAsc ? 'Asc' : 'Desc';
+
     return (
       <div className="game">
         <div className="game-board">
@@ -116,7 +133,11 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <OrderToggleButton 
+            value={order}
+            onClick={() => this.handleOrderClick()}
+          />
+          <ol>{this.state.orderByAsc ? moves : moves.reverse()}</ol>
         </div>
       </div>
     );
